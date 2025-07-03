@@ -1,0 +1,38 @@
+name: GitHub Actions Demo
+on:
+  push:
+    branches:
+      - main
+      - 'reg_branch'
+      - 'hyper_branch'
+
+
+jobs:
+  Explore-GitHub-Actions:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.11']
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Verify environment and list files
+        run: |
+          echo "Repository cloned: $GITHUB_REPOSITORY"
+          echo "Workflow is ready to run tests."
+          echo "Repository contents:"
+          ls -1 "$GITHUB_WORKSPACE"
+          echo "Job status: ${{ job.status }}"
+
+
+      - name: Install dependencies
+        run: pip install --no-cache-dir -r requirements.txt
+
+      - name: Run experiment
+        run: python regression.py
